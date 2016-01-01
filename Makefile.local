@@ -12,12 +12,12 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+.PHONY: setup-clean setup clean build \
+        opam release update-release publish pr test-opam
+
 VERSION = $(shell grep '^Version:' _oasis | sed 's/Version: *//')
 NAME    = $(shell grep '^Name:' _oasis    | sed 's/Name: *//')
 ARCHIVE = https://github.com/mor1/ocaml-cal/archive/$(VERSION).tar.gz
-
-ocal: src/config.ml
-	mv ocal.native ocal
 
 src/config.ml: _oasis
 	$(RM) src/config.ml
@@ -38,6 +38,9 @@ setup: src/config.ml setup.ml setup.data
 clean:
 	$(SETUP) -clean $(CLEANFLAGS)
 	$(RM) src/config.ml
+
+build: src/config.ml
+	$(SETUP) -build $(CLEANFLAGS)
 
 ## Release targets
 

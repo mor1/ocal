@@ -1,12 +1,9 @@
 -include Makefile.config
 
 # OASIS_START
-# DO NOT EDIT (digest: 4e7662878ed07034404b11b2db148ee4)
+# DO NOT EDIT (digest: 87319666df0bdc9677a9a25c93db56b6)
 
 SETUP = ocaml setup.ml
-
-build: setup.data
-	$(SETUP) -build $(BUILDFLAGS)
 
 doc: setup.data build
 	$(SETUP) -doc $(DOCFLAGS)
@@ -35,7 +32,7 @@ setup.data:
 configure:
 	$(SETUP) -configure $(CONFIGUREFLAGS)
 
-.PHONY: build doc test all install uninstall reinstall distclean configure
+.PHONY: doc test all install uninstall reinstall distclean configure
 
 # OASIS_STOP
 
