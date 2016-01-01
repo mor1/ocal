@@ -28,7 +28,7 @@ let day_of_string = function
   | "Sun" -> Date.Sun
   | _ as s -> invalid_arg ("invalid day: " ^ s)
 
-let cal nohighlight today years ncols sep firstday =
+let cal nohighlight today years ncols sep firstday months =
   let today = Printer.Date.to_string today in
   let firstday = Printer.name_of_day firstday in
   Printf.printf "nohighlight=%b\n\
@@ -36,8 +36,9 @@ let cal nohighlight today years ncols sep firstday =
                  years=%b\n\
                  ncols=%d\n\
                  sep='%s'\n\
-                 firstday=%s\n%!"
-    nohighlight today years ncols sep firstday
+                 firstday=%s\n\
+                 months=%s\n%!"
+    nohighlight today years ncols sep firstday months
 
 (* command line parsing *)
 
@@ -91,6 +92,16 @@ let nohighlight =
   let doc = "Turn off highlighting." in
   Arg.(value & flag & info ["n"; "no-highlight"] ~doc)
 
+let months =
+  let aux =
+    let parse range =
+      `Ok range
+    in
+    parse, fun ppf p -> Format.fprintf ppf "%s" "range"
+  in
+  let doc = "RANGE." in
+  Arg.(required & pos 0 (some aux) None & info [] ~docv:"RANGE" ~doc)
+
 let cmd =
   let doc = "pretty print calendar months" in
   let man = [
@@ -114,7 +125,8 @@ let cmd =
     `P "Report bugs at https://github.com/mor1/ocaml-cal/issues.";
   ]
   in
-  Term.(const cal $ nohighlight $ today $ years $ ncols $ sep $ firstday),
+  Term.(const
+          cal $ nohighlight $ today $ years $ ncols $ sep $ firstday $ months),
   Term.info Config.command ~version:Config.version ~doc ~man
 
 (* go! *)
