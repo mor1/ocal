@@ -149,8 +149,7 @@ let cmd =
     `P "Report bugs at https://github.com/mor1/ocaml-cal/issues.";
   ]
   in
-  Term.(const
-          cal $ plain $ today $ ncols $ sep $ firstday $ range),
+  Term.(const cal $ plain $ today $ ncols $ sep $ firstday $ range),
   Term.info Config.command ~version:Config.version ~doc ~man
 
 (* go! *)
