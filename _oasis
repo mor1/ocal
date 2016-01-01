@@ -1,0 +1,26 @@
+OASISFormat: 0.4
+Name:        ocal
+Version:     0.1.1
+Synopsis:    Unix `cal` replacement
+Authors:     Richard Mortier
+Homepage:    http://github.com/mor1/ocaml-cal
+License:     ISC
+BuildTools:  ocamlbuild
+Description:
+  A replacement for the standard Unix `cal` utility. Partly because I could,
+  partly because I'd become too irritated with its command line interface.
+Maintainers:
+  Richard Mortier <mort@cantab.net>
+
+AlphaFeatures: ocamlbuild_more_args, pure_interface
+
+Plugins: META (0.4), DevFiles (0.4)
+XDevFilesMakefileNoTargets: clean
+XDevFilesEnableConfigure: false
+
+Executable "ocal"
+  Path: src/
+  MainIs: ocal.ml
+  CompiledObject: best
+  Install: true
+  BuildDepends: cmdliner, astring, calendar
