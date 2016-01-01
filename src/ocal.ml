@@ -28,17 +28,51 @@ let day_of_string = function
   | "Sun" -> Date.Sun
   | _ as s -> invalid_arg ("invalid day: " ^ s)
 
-let cal nohighlight today years ncols sep firstday months =
+let months range =
+  let parse ?(rh=false) s =
+    let date =
+      Printer.Date.(
+        try
+          let year = string_of_int Date.(year (today ())) in
+          from_fstring "%d%b%Y" ((if rh then "28" else "01")^s^year)
+        with Invalid_argument _ -> begin
+            try from_fstring "%d%b%Y" ((if rh then "28Dec" else "01Jan")^s)
+            with Invalid_argument _ -> begin
+                from_fstring "%d%b%Y" ((if rh then "28" else "01")^s)
+              end
+          end
+      )
+    in
+    match rh with
+    | true ->
+      Date.(make (year date) (int_of_month (month date)) (days_in_month date))
+    | false ->
+      date
+  in
+  match String.cuts ~sep:"-" range with
+  | [st; nd] -> begin
+      let st = parse st in
+      let nd = parse ~rh:true nd in
+      [st; nd]
+    end
+  | [st] -> begin
+      [parse st]
+    end
+  | _ -> invalid_arg ("invalid date range: " ^ range)
+
+let cal plain today ncols sep firstday range =
   let today = Printer.Date.to_string today in
   let firstday = Printer.name_of_day firstday in
-  Printf.printf "nohighlight=%b\n\
+  Printf.printf "plain=%b\n\
                  today=%s\n\
-                 years=%b\n\
                  ncols=%d\n\
                  sep='%s'\n\
                  firstday=%s\n\
-                 months=%s\n%!"
-    nohighlight today years ncols sep firstday months
+                 range=%s\n%!"
+    plain today ncols sep firstday range
+  ;
+  Printf.printf "months=%s\n%!"
+    (String.concat ~sep:"," (months range |> List.map Printer.Date.to_string))
 
 (* command line parsing *)
 
