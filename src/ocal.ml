@@ -84,23 +84,13 @@ let firstday =
   let doc = "Format with $(docv) as first day-of-week." in
   Arg.(value & opt aux (Date.Mon) & info ["f"; "firstday"] ~docv:"ddd" ~doc)
 
-let years =
-  let doc = "Interpret arguments as years." in
-  Arg.(value & flag & info ["y"; "years"] ~doc)
-
-let nohighlight =
+let plain =
   let doc = "Turn off highlighting." in
-  Arg.(value & flag & info ["n"; "no-highlight"] ~doc)
+  Arg.(value & flag & info ["p"; "plain"] ~doc)
 
-let months =
-  let aux =
-    let parse range =
-      `Ok range
-    in
-    parse, fun ppf p -> Format.fprintf ppf "%s" "range"
-  in
-  let doc = "RANGE." in
-  Arg.(required & pos 0 (some aux) None & info [] ~docv:"RANGE" ~doc)
+let range =
+ let doc = "RANGE." in
+  Arg.(required & pos 0 (some string) None & info [] ~docv:"RANGE" ~doc)
 
 let cmd =
   let doc = "pretty print calendar months" in
@@ -126,7 +116,7 @@ let cmd =
   ]
   in
   Term.(const
-          cal $ nohighlight $ today $ years $ ncols $ sep $ firstday $ months),
+          cal $ plain $ today $ ncols $ sep $ firstday $ range),
   Term.info Config.command ~version:Config.version ~doc ~man
 
 (* go! *)
