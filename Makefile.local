@@ -1,0 +1,70 @@
+# Copyright (c) 2016 Richard Mortier <mort@cantab.net>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+VERSION = $(shell grep '^Version:' _oasis | sed 's/Version: *//')
+NAME    = $(shell grep '^Name:' _oasis    | sed 's/Name: *//')
+ARCHIVE = https://github.com/mor1/ocaml-cal/archive/$(VERSION).tar.gz
+
+ocal: src/config.ml
+	mv ocal.native ocal
+
+src/config.ml: _oasis
+	$(RM) src/config.ml
+	echo "let version = \"$(VERSION)\"" > src/config.ml
+	echo "let command = \"$(NAME)\""   >> src/config.ml
+
+## Oasis targets
+
+setup-clean: clean distclean
+	oasis setup-clean
+	$(RM) setup.* _tags configure myocamlbuild.ml
+
+setup.ml: _oasis
+	oasis setup
+
+setup: src/config.ml setup.ml setup.data
+
+clean:
+	$(SETUP) -clean $(CLEANFLAGS)
+	$(RM) src/config.ml
+
+## Release targets
+
+opam: release publish pr
+
+release:
+	git tag -a $(VERSION) -m "Version $(VERSION)."
+	git push upstream $(VERSION)
+
+update-release:
+	git push upstream master
+	git tag -f $(VERSION) -m "Version $(VERSION)."
+	git push --force upstream $(VERSION)
+
+publish:
+	OPAMYES=1 opam pin add -n .
+	opam publish prepare $(NAME).$(VERSION) $(ARCHIVE)
+
+pr:
+	OPAMYES=1 opam pin add -n $(NAME) $(NAME).$(VERSION)
+	opam publish submit $(NAME).$(VERSION) && $(RM) -r $(NAME).$(VERSION)
+
+test-opam:
+	opam switch system
+	opam switch remove test-opam -y
+	opam switch test-opam -A system -y
+	eval $$(opam config env)
+	opam pin add cal . -k git -y
+	opam switch system
+	eval $$(opam config env)
