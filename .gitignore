@@ -1,0 +1,8 @@
+# standard oasis droppings
+_build/
+*.log
+*.data
+*.native
+
+# target
+ocal
