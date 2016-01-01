@@ -1,0 +1,3 @@
+PKG cmdliner astring calendar
+S src/
+B _build/src/
