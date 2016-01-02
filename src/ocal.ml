@@ -249,7 +249,7 @@ let plain =
   Arg.(value & flag & info ["p"; "plain"] ~doc)
 
 let range =
- let doc = "RANGE." in
+  let doc = "RANGE." in
   Arg.(required & pos 0 (some string) None & info [] ~docv:"RANGE" ~doc)
 
 let cmd =
