@@ -30,15 +30,19 @@ let day_of_string = function
 
 let months range =
   let parse ?(rh=false) s =
+    let s = String.Ascii.capitalize s in
     let date =
       Printer.Date.(
         try
-          let year = string_of_int Date.(year (today ())) in
-          from_fstring "%d%b%Y" ((if rh then "28" else "01")^s^year)
+          (* monthyear *)
+          from_fstring "%d%b%Y" ((if rh then "28" else "01")^s)
         with Invalid_argument _ -> begin
-            try from_fstring "%d%b%Y" ((if rh then "28Dec" else "01Jan")^s)
+            (* year *)
+            try from_fstring "%d%b%Y" ((if rh then "31Dec" else "01Jan")^s)
             with Invalid_argument _ -> begin
-                from_fstring "%d%b%Y" ((if rh then "28" else "01")^s)
+                (* month *)
+                let thisyear = string_of_int Date.(year (today ())) in
+                from_fstring "%d%b%Y" ((if rh then "28" else "01")^s^thisyear)
               end
           end
       )
@@ -53,11 +57,17 @@ let months range =
   | [st; nd] -> begin
       let st = parse st in
       let nd = parse ~rh:true nd in
-      [st; nd]
+
+      let rec aux d nd acc =
+        match Date.compare d nd with
+        | n when n > 0 (*  > *) -> List.rev acc
+        | n            (* <= *) ->
+          let d' = (Date.next d `Month) in
+          aux d' nd (d::acc)
+      in
+      aux st nd []
     end
-  | [st] -> begin
-      [parse st]
-    end
+  | [st] -> [ parse st ]
   | _ -> invalid_arg ("invalid date range: " ^ range)
 
 let cal plain today ncols sep firstday range =
@@ -109,7 +119,7 @@ let firstday =
   let aux =
     let parse day =
       try
-        `Ok (day |> String.Ascii.lowercase |> day_of_string)
+        `Ok (day |> String.Ascii.capitalize |> day_of_string)
       with
       | Invalid_argument s -> `Error s
     in
