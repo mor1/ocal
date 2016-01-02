@@ -85,6 +85,21 @@ let months range =
   | [st]     -> expand st st
   | _        -> invalid_arg ("invalid date range: " ^ range)
 
+module F = struct
+  open Printf
+  let bold fmt      = sprintf ("\x1b[0;1m"^^fmt^^"\x1b[0m")
+  let hilight fmt   = sprintf ("\x1b[0;1;7m"^^fmt^^"\x1b[0m")
+  let underline fmt = sprintf ("\x1b[0;4m"^^fmt^^"\x1b[0m")
+
+  let center ~w s =
+    let pad = w - String.length s in
+    let lpad, rpad =
+      let space = fun _ -> ' ' in
+      String.(v ~len:(pad/2) space, v ~len:((pad+1)/2) space)
+    in
+    lpad ^ s ^ rpad
+end
+
 let cal plain today ncols sep firstday range =
   let ppf date =
     let month, year = Date.(month date, year date) in
