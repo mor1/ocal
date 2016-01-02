@@ -18,7 +18,13 @@ open Cmdliner
 open Astring
 open CalendarLib
 
-let day_of_string = function
+module Day : sig
+  val of_string: string -> Date.day
+  val to_string: Date.day -> string
+  val find: Date.day -> int
+  val week: Date.day -> Date.day array
+end = struct
+  let of_string = function
   | "Mon" -> Date.Mon
   | "Tue" -> Date.Tue
   | "Wed" -> Date.Wed
@@ -27,6 +33,20 @@ let day_of_string = function
   | "Sat" -> Date.Sat
   | "Sun" -> Date.Sun
   | _ as s -> invalid_arg ("invalid day: " ^ s)
+
+  let to_string d = d |> Printer.short_name_of_day |> String.with_range ~len:2
+
+  let _days = Date.([| Mon; Tue; Wed; Thu; Fri; Sat; Sun;
+                       Mon; Tue; Wed; Thu; Fri; Sat; Sun
+                    |])
+  let find x =
+    let rec aux a x n = if a.(n) = x then n else aux a x (n+1) in
+    aux _days x 0
+
+  let week firstday =
+    let i = find firstday in
+    Array.sub _days i 7
+end
 
 let months range =
   let parse ?(rh=false) s =
