@@ -66,18 +66,16 @@ let months range =
   | _        -> invalid_arg ("invalid date range: " ^ range)
 
 let cal plain today ncols sep firstday range =
-  let today = Printer.Date.to_string today in
-  let firstday = Printer.name_of_day firstday in
-  Printf.printf "plain=%b\n\
-                 today=%s\n\
-                 ncols=%d\n\
-                 sep='%s'\n\
-                 firstday=%s\n\
-                 range=%s\n%!"
-    plain today ncols sep firstday range
-  ;
-  Printf.printf "months=%s\n%!"
-    (String.concat ~sep:"," (months range |> List.map Printer.Date.to_string))
+  let ppf date =
+    let month, year = Date.(month date, year date) in
+    let firstday, lastdate = Date.(day_of_week date, days_in_month date) in
+    Printf.sprintf "firstday=%s lastdate=%d month=%s year=%d"
+      (Printer.short_name_of_day firstday) lastdate
+      (Printer.name_of_month month) year
+  in
+  months range
+  |> List.map ppf
+  |> List.iter (fun s -> Printf.printf "%s\n%!" s)
 
 (* command line parsing *)
 
