@@ -25,14 +25,14 @@ module Day : sig
   val week: Date.day -> Date.day array
 end = struct
   let of_string = function
-  | "Mon" -> Date.Mon
-  | "Tue" -> Date.Tue
-  | "Wed" -> Date.Wed
-  | "Thu" -> Date.Thu
-  | "Fri" -> Date.Fri
-  | "Sat" -> Date.Sat
-  | "Sun" -> Date.Sun
-  | _ as s -> invalid_arg ("invalid day: " ^ s)
+    | "Mon" -> Date.Mon
+    | "Tue" -> Date.Tue
+    | "Wed" -> Date.Wed
+    | "Thu" -> Date.Thu
+    | "Fri" -> Date.Fri
+    | "Sat" -> Date.Sat
+    | "Sun" -> Date.Sun
+    | _ as s -> invalid_arg ("invalid day: " ^ s)
 
   let to_string d = d |> Printer.short_name_of_day |> String.with_range ~len:2
 
@@ -67,17 +67,17 @@ let months range =
   in
 
   let expand st nd =
-      let st = parse st in
-      let nd = parse ~rh:true nd in
+    let st = parse st in
+    let nd = parse ~rh:true nd in
 
-      let rec aux d nd acc =
-        match Date.compare d nd with
-        | n when n > 0 (* >  *) -> List.rev acc
-        | n            (* <= *) ->
-          let d' = (Date.next d `Month) in
-          aux d' nd (d::acc)
-      in
-      aux st nd []
+    let rec aux d nd acc =
+      match Date.compare d nd with
+      | n when n > 0 (* >  *) -> List.rev acc
+      | n            (* <= *) ->
+        let d' = (Date.next d `Month) in
+        aux d' nd (d::acc)
+    in
+    aux st nd []
   in
 
   match String.cuts ~sep:"-" range with
