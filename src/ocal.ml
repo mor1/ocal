@@ -136,44 +136,69 @@ module F = struct
 
   let center ~w s =
     let pad = w - String.length s in
-    let lpad, rpad =
-      let space = fun _ -> ' ' in
-      String.(v ~len:(pad/2) space, v ~len:((pad+1)/2) space)
-    in
-    lpad ^ s ^ rpad
+    s |> String.lpad (pad/2) |> String.rpad ((pad+1)/2)
 end
 
 let cal plain today ncols sep firstday range =
   months range
   |> List.map (fun date ->
+      (* generate list of lines per month *)
       let open Printf in
       let month, year = Date.(month date, year date) in
+
+      (* header: "Month Year", centred, bold *)
       let monthyear = sprintf "%s %d" (Printer.name_of_month month) year
-                      |> F.center ~w:20 |> F.bold "%s"
+                      |> F.center ~w:20
+                      |> F.bold "%s"
       in
-      let week = Day.week firstday
-                 |> Array.map Day.to_string
-                 |> Array.to_list
-                 |> String.concat ~sep:" "
-                 |> F.underline "%s"
+
+      (* weekdays: "Mo Tu ... Su", underlined *)
+      let weekdays = Day.week firstday
+                     |> Array.map Day.to_string
+                     |> Array.to_list
+                     |> String.concat ~sep:" "
+                     |> F.underline "%s"
       in
+
+      (* days of the week: first row lpadded, last row rpadded *)
       let days =
-        let rec aux n i acc = if i > n then acc else aux n (i+1) (i::acc) in
-        let lastdate = Date.days_in_month date in
-        aux lastdate 1 []
-        |> List.rev
-        |> List.map (fun d -> sprintf "%2d" d)
-        |> String.concat ~sep:" "
+        List.seq 1 (Date.days_in_month date) (* generate list *)
+        |> (fun days ->
+            (* divide list: partial first and last weeks, plus full weeks *)
+            let start_full_week =
+              Date.nth_weekday_of_month year month firstday 1
+              |> Date.day_of_month
+            in
+            let h, t = List.split (start_full_week - 1) days in
+            h :: List.chunk 7 t
+            |> List.filter (function [] -> false | _ -> true)
+          )
+        |> (let opt_hilight d =
+              (* highlight today's date *)
+              if (Date.year today = year
+                  && Date.month today = month
+                  && Date.day_of_month today = d
+                 )
+              then
+                F.hilight "%2d" d
+              else
+                sprintf "%2d" d
+            in
+            (* stringify each week, padding as needed  *)
+            List.mapi (fun i line ->
+                let pad = (20 - (List.length line * 3) + 1) mod 20 in
+                line
+                |> List.map (fun d -> sprintf "%s" (opt_hilight d))
+                |> String.concat ~sep:" "
+                |> (fun line -> String.(if i = 0 then lpad else rpad) pad line)
+              )
+           )
       in
-      let day_offset =
-        let lpad = (1 + String.length sep)
-                   * (Day.find (Date.day_of_week date))
-        in
-        String.v ~len:lpad (fun _ -> ' ')
-      in
-      sprintf "%s%s%s%s" monthyear week day_offset days
+      monthyear :: weekdays :: days
     )
-  |> List.iter (fun s -> Printf.printf "%s\n%!" s)
+  |> List.iter (fun row ->
+      Printf.printf "%s\n%!" (String.concat ~sep:"\n" row)
+    )
 
 (* command line parsing *)
 
