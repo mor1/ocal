@@ -101,15 +101,35 @@ module F = struct
 end
 
 let cal plain today ncols sep firstday range =
-  let ppf date =
-    let month, year = Date.(month date, year date) in
-    let firstday, lastdate = Date.(day_of_week date, days_in_month date) in
-    Printf.sprintf "firstday=%s lastdate=%d month=%s year=%d"
-      (Printer.short_name_of_day firstday) lastdate
-      (Printer.name_of_month month) year
-  in
   months range
-  |> List.map ppf
+  |> List.map (fun date ->
+      let open Printf in
+      let month, year = Date.(month date, year date) in
+      let monthyear = sprintf "%s %d" (Printer.name_of_month month) year
+                      |> F.center ~w:20 |> F.bold "%s"
+      in
+      let week = Day.week firstday
+                 |> Array.map Day.to_string
+                 |> Array.to_list
+                 |> String.concat ~sep:" "
+                 |> F.underline "%s"
+      in
+      let days =
+        let rec aux n i acc = if i > n then acc else aux n (i+1) (i::acc) in
+        let lastdate = Date.days_in_month date in
+        aux lastdate 1 []
+        |> List.rev
+        |> List.map (fun d -> sprintf "%2d" d)
+        |> String.concat ~sep:" "
+      in
+      let day_offset =
+        let lpad = (1 + String.length sep)
+                   * (Day.find (Date.day_of_week date))
+        in
+        String.v ~len:lpad (fun _ -> ' ')
+      in
+      sprintf "%s%s%s%s" monthyear week day_offset days
+    )
   |> List.iter (fun s -> Printf.printf "%s\n%!" s)
 
 (* command line parsing *)
@@ -141,13 +161,13 @@ let ncols =
 
 let sep =
   let doc = "Format using $(docv) as month separator." in
-  Arg.(value & opt string "   " & info ["s"; "separator"] ~docv:"sep" ~doc)
+  Arg.(value & opt string "  " & info ["s"; "separator"] ~docv:"sep" ~doc)
 
 let firstday =
   let aux =
     let parse day =
       try
-        `Ok (day |> String.Ascii.capitalize |> day_of_string)
+        `Ok (day |> String.Ascii.capitalize |> Day.of_string)
       with
       | Invalid_argument s -> `Error s
     in
