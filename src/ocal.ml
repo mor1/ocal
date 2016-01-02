@@ -135,7 +135,7 @@ let cal plain today ncols sep firstday range =
 (* command line parsing *)
 
 let today =
-  let aux =
+  let date =
     let parse date =
       try
         `Ok (Printer.Date.from_string date)
@@ -152,7 +152,7 @@ let today =
     parse, fun ppf p -> Format.fprintf ppf "%s" (Printer.Date.to_string p)
   in
   let doc = "Set today's date." in
-  Arg.(value & opt aux (Date.today ())
+  Arg.(value & opt date (Date.today ())
        & info ["t"; "today"] ~docv:"yyyy-mm-dd" ~doc)
 
 let ncols =
