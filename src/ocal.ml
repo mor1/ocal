@@ -18,6 +18,49 @@ open Cmdliner
 open Astring
 open CalendarLib
 
+module String = struct
+  include String
+  let space = fun _ -> ' '
+
+  let lpad, rpad =
+    let pad len = if len < 0 then "" else v ~len space in
+    (fun n s -> (pad n) ^ s),
+    (fun n s -> s ^ (pad n))
+end
+
+module List = struct
+  include List
+
+  let chunk n list =
+    list
+    |> fold_left (fun (i,acc) e ->
+        match i with
+        | i when i = 0 -> 1, [e] :: acc
+        | i when i < n ->
+          let n' = (i+1) mod n in
+          let acc' = ((e :: hd acc) :: (tl acc)) in
+          n', acc'
+        | i (* >= n *) -> failwith "never reached"
+      ) (0, [])
+    |> snd
+    |> List.(rev_map rev)
+
+  let seq a b =
+    let rec aux a b =
+      if a > b then [] else a :: aux (a+1) b
+    in
+    if a < b then aux a b else List.rev (aux b a)
+
+  let split n list =
+    let rec aux i acc = function
+      | [] -> List.rev acc, []
+      | h :: t as l ->
+        if i = 0 then List.rev acc, l else aux (i-1) (h :: acc) t
+    in
+    aux n [] list
+
+end
+
 module Day : sig
   val of_string: string -> Date.day
   val to_string: Date.day -> string
