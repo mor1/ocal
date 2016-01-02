@@ -31,44 +31,39 @@ let day_of_string = function
 let months range =
   let parse ?(rh=false) s =
     let s = String.Ascii.capitalize s in
-    let date =
-      Printer.Date.(
-        try
-          (* monthyear *)
-          from_fstring "%d%b%Y" ((if rh then "28" else "01")^s)
-        with Invalid_argument _ -> begin
-            (* year *)
-            try from_fstring "%d%b%Y" ((if rh then "31Dec" else "01Jan")^s)
-            with Invalid_argument _ -> begin
-                (* month *)
-                let thisyear = string_of_int Date.(year (today ())) in
-                from_fstring "%d%b%Y" ((if rh then "28" else "01")^s^thisyear)
-              end
-          end
-      )
-    in
-    match rh with
-    | true ->
-      Date.(make (year date) (int_of_month (month date)) (days_in_month date))
-    | false ->
-      date
+    Printer.Date.(
+      (* monthyear *)
+      try from_fstring "%d%b%Y" ("01"^s)
+      with Invalid_argument _ -> begin
+          (* year *)
+          try from_fstring "%d%b%Y" ("01"^(if rh then "Dec" else "Jan")^s)
+          with Invalid_argument _ -> begin
+              (* month *)
+              let thisyear = string_of_int Date.(year (today ())) in
+              from_fstring "%d%b%Y" ("01"^s^thisyear)
+            end
+        end
+    )
   in
-  match String.cuts ~sep:"-" range with
-  | [st; nd] -> begin
+
+  let expand st nd =
       let st = parse st in
       let nd = parse ~rh:true nd in
 
       let rec aux d nd acc =
         match Date.compare d nd with
-        | n when n > 0 (*  > *) -> List.rev acc
+        | n when n > 0 (* >  *) -> List.rev acc
         | n            (* <= *) ->
           let d' = (Date.next d `Month) in
           aux d' nd (d::acc)
       in
       aux st nd []
-    end
-  | [st] -> [ parse st ]
-  | _ -> invalid_arg ("invalid date range: " ^ range)
+  in
+
+  match String.cuts ~sep:"-" range with
+  | [st; nd] -> expand st nd
+  | [st]     -> expand st st
+  | _        -> invalid_arg ("invalid date range: " ^ range)
 
 let cal plain today ncols sep firstday range =
   let today = Printer.Date.to_string today in
