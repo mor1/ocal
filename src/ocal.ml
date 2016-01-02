@@ -263,7 +263,7 @@ let cmd =
 
     `S "HISTORY";
     `P
-      "Translated from\
+      "An alternative to\
       \ https://github.com/mor1/python-scripts/blob/master/cal.py because I got\
       \ tired of the startup time. The Python version was written because I got\
       \ tired of the CLI.";
