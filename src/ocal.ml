@@ -292,7 +292,7 @@ let cmd =
     `P "Richard Mortier <mort@cantab.net>.";
 
     `S "BUGS";
-    `P "Report bugs at https://github.com/mor1/ocaml-cal/issues.";
+    `P "Report bugs at https://github.com/mor1/ocal/issues.";
   ]
   in
   Term.(const cal $ plain $ today $ ncols $ sep $ firstday $ range),

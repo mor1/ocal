@@ -17,7 +17,7 @@
 
 VERSION = $(shell grep '^Version:' _oasis | sed 's/Version: *//')
 NAME    = $(shell grep '^Name:' _oasis    | sed 's/Name: *//')
-ARCHIVE = https://github.com/mor1/ocaml-cal/archive/$(VERSION).tar.gz
+ARCHIVE = https://github.com/mor1/ocal/archive/$(VERSION).tar.gz
 
 src/config.ml: _oasis
 	$(RM) src/config.ml
