@@ -206,22 +206,16 @@ let today =
   let date =
     let parse date =
       try
-        `Ok (Printer.Date.from_string date)
+        `Ok (Printer.Date.from_fstring "%d%b%Y" date)
       with
       | Invalid_argument _ ->
-        try
-          let date = Printer.Date.from_fstring "%y-%m-%d" date in
-          (* [Calendar.Date.from_string "%y" xx] defaults to `Year 19xx *)
-          `Ok Date.(add date (Period.year 100))
-        with
-        | Invalid_argument _ ->
-          `Error ("invalid date string: " ^ date)
+        `Error ("invalid date string: " ^ date)
     in
     parse, fun ppf p -> Format.fprintf ppf "%s" (Printer.Date.to_string p)
   in
   let doc = "Set today's date." in
   Arg.(value & opt date (Date.today ())
-       & info ["t"; "today"] ~docv:"yyyy-mm-dd" ~doc)
+       & info ["t"; "today"] ~docv:"ddmmyyyy" ~doc)
 
 let ncols =
   let doc = "Format across $(docv) columns." in
