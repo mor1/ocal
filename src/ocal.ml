@@ -34,13 +34,13 @@ module List = struct
   let chunk n list =
     list
     |> fold_left (fun (i,acc) e ->
-        match i with
-        | i when i = 0 -> 1, [e] :: acc
-        | i when i < n ->
+        match (i, n) with
+        | (i, n) when i = 0 || n = 1 -> 1, [e] :: acc
+        | (i, n) when i < n ->
           let n' = (i+1) mod n in
           let acc' = ((e :: hd acc) :: (tl acc)) in
           n', acc'
-        | i (* >= n *) -> failwith "never reached"
+        | (i, _) (* i >= n *) -> failwith "never reached"
       ) (0, [])
     |> snd
     |> List.(rev_map rev)
