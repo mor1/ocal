@@ -22,5 +22,5 @@ Executable "ocal"
   Path: src/
   MainIs: ocal.ml
   CompiledObject: best
-  Install: true
+  Install: false
   BuildDepends: cmdliner, astring, calendar
