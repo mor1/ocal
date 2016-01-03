@@ -223,7 +223,7 @@ let ncols =
 
 let sep =
   let doc = "Format using $(docv) as month separator." in
-  Arg.(value & opt string "  " & info ["s"; "separator"] ~docv:"sep" ~doc)
+  Arg.(value & opt string "    " & info ["s"; "separator"] ~docv:"sep" ~doc)
 
 let firstday =
   let aux =
