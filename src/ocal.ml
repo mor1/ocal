@@ -262,8 +262,15 @@ let plain =
   Arg.(value & flag & info ["p"; "plain"] ~doc)
 
 let range =
-  let doc = "RANGE." in
-  Arg.(required & pos 0 (some string) None & info [] ~docv:"RANGE" ~doc)
+  let doc = "$(docv) are specified as:\n\
+            \  $(i,mmm) (month $(i,mmm));\n\
+            \  $(i,yyyy) (year $(i,yyyy));\n\
+            \  $(i,mmmyyyy) (month $(i,mmm), year $(i,yyyy));\n\
+            \  $(i,d1-d2) (all months in the range $(i,d1-d2)).\
+            "
+  in
+  let thismonth = Some (Printer.Date.sprint "%b%Y" (Date.today ())) in
+  Arg.(required & pos 0 (some string) thismonth & info [] ~docv:"DATES" ~doc)
 
 let cmd =
   let doc = "pretty print calendar months" in
