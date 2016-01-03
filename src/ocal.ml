@@ -196,8 +196,27 @@ let cal plain today ncols sep firstday range =
       in
       monthyear :: weekdays :: days
     )
-  |> List.iter (fun row ->
-      Printf.printf "%s\n%!" (String.concat ~sep:"\n" row)
+  |> List.chunk ncols
+  |> (fun rows ->
+      List.iteri (fun r row ->
+          let nlines =
+            List.(map length row |> fold_left (fun acc e -> max acc e) 0)
+          in
+          for i = 0 to nlines-1 do
+            for j = 0 to ncols-1 do
+              try
+                let month = List.nth row j in
+                let line = List.nth month i in
+                Printf.printf "%s%s" line sep
+              with
+              | Failure "nth" ->
+                Printf.printf "%s%s" (String.(v ~len:20 space)) sep;
+            done;
+            Printf.printf "\n";
+          done;
+          if r < (List.length rows) - 1 then Printf.printf "\n";
+        ) rows;
+        Printf.printf "%!"
     )
 
 (* command line parsing *)
