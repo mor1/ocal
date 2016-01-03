@@ -1,0 +1,4 @@
+bin: [
+  "?_build/src/ocal.byte" {"ocal"}
+  "?_build/src/ocal.native" {"ocal"}
+]
