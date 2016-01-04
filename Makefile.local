@@ -40,7 +40,7 @@ clean:
 	$(RM) src/config.ml
 
 build: src/config.ml
-	$(SETUP) -build $(CLEANFLAGS)
+	$(SETUP) -build $(BUILDFLAGS)
 
 ## Release targets
 
