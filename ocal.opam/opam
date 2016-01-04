@@ -5,9 +5,9 @@ maintainer: "Richard Mortier <mort@cantab.net>"
 authors: [ "Richard Mortier" ]
 license: "ISC"
 
-homepage: "http://github.com/mor1/ocal"
-dev-repo: "http://github.com/mor1/ocal"
-bug-reports: "http://github.com/mor1/ocal"
+homepage: "https://github.com/mor1/ocal"
+dev-repo: "https://github.com/mor1/ocal.git"
+bug-reports: "https://github.com/mor1/ocal/issues"
 
 build: [
   [make "configure"]
