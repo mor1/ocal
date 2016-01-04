@@ -3,7 +3,7 @@ Name:        ocal
 Version:     0.1.1
 Synopsis:    Unix `cal` replacement
 Authors:     Richard Mortier
-Homepage:    http://github.com/mor1/ocaml-cal
+Homepage:    https://github.com/mor1/ocal
 License:     ISC
 BuildTools:  ocamlbuild
 Description:
@@ -15,7 +15,7 @@ Maintainers:
 AlphaFeatures: ocamlbuild_more_args, pure_interface
 
 Plugins: META (0.4), DevFiles (0.4)
-XDevFilesMakefileNoTargets: clean, build
+XDevFilesMakefileNoTargets: configure, distclean, build
 XDevFilesEnableConfigure: false
 
 Executable "ocal"

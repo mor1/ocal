@@ -12,7 +12,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-.PHONY: setup-clean setup clean build \
+.PHONY: setup-clean setup distclean build configure \
         opam release update-release publish pr test-opam
 
 VERSION = $(shell grep '^Version:' _oasis | sed 's/Version: *//')
@@ -26,7 +26,7 @@ src/config.ml: _oasis
 
 ## Oasis targets
 
-setup-clean: clean distclean
+setup-clean: distclean
 	oasis setup-clean
 	$(RM) setup.* _tags configure myocamlbuild.ml
 
@@ -35,12 +35,15 @@ setup.ml: _oasis
 
 setup: src/config.ml setup.ml setup.data
 
-clean:
-	$(SETUP) -clean $(CLEANFLAGS)
+distclean:
+	$(SETUP) -distclean $(DISTCLEANFLAGS)
 	$(RM) src/config.ml
 
 build: src/config.ml
 	$(SETUP) -build $(BUILDFLAGS)
+
+configure: src/config.ml
+	$(SETUP) -configure $(CONFIGUREFLAGS)
 
 ## Release targets
 
