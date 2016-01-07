@@ -1,6 +1,6 @@
 OASISFormat: 0.4
 Name:        ocal
-Version:     0.1.1
+Version:     0.1.2
 Synopsis:    Unix `cal` replacement
 Authors:     Richard Mortier
 Homepage:    https://github.com/mor1/ocal
