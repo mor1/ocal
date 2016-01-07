@@ -14,10 +14,6 @@ build: [
   [make "build"]
 ]
 
-install: [
-  [make "install"]
-]
-
 depends: [
   "astring" {build}
   "calendar" {build}
