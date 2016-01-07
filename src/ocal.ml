@@ -205,17 +205,26 @@ let cal plain today ncols sep firstday range =
           in
           for i = 0 to nlines-1 do
             for j = 0 to ncols-1 do
-              try
-                let month = List.nth row j in
-                let line = List.nth month i in
-                Printf.printf "%s%s" line sep
-              with
-              | Failure "nth" ->
-                Printf.printf "%s%s" (String.(v ~len:20 space)) sep;
+              let month =
+                try Some (List.nth row j) with Failure "nth" -> None
+              in
+              let line =
+                match month with
+                | Some month -> (
+                    try Some (List.nth month i) with Failure "nth" -> None
+                  )
+                | None -> None
+              in
+              let sep = if j = 0 then "" else sep in
+              match month, line with
+              | None, _ -> ()
+              | Some month, None ->
+                Printf.printf "%s%s" sep (String.(v ~len:20 space));
+              | Some month, Some line ->
+                Printf.printf "%s%s" sep line
             done;
-            Printf.printf "\n";
+            Printf.printf "\n"
           done;
-          if r < (List.length rows) - 1 then Printf.printf "\n";
         ) rows;
         Printf.printf "%!"
     )
