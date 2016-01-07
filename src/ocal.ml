@@ -235,7 +235,7 @@ let today =
   in
   let doc = "Set today's date." in
   Arg.(value & opt date (Date.today ())
-       & info ["t"; "today"] ~docv:"ddmmyyyy" ~doc)
+       & info ["t"; "today"] ~docv:"ddMmmyyyy" ~doc)
 
 let ncols =
   let doc = "Format across $(docv) columns." in
