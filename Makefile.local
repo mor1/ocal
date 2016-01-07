@@ -33,7 +33,9 @@ setup-clean: distclean
 setup.ml: _oasis
 	oasis setup
 
-setup: src/config.ml setup.ml setup.data
+setup: setup.data
+setup.data: src/config.ml setup.ml
+	$(MAKE) configure
 
 distclean:
 	$(SETUP) -distclean $(DISTCLEANFLAGS)
