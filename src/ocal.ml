@@ -149,7 +149,7 @@ let cal plain today ncols sep firstday range =
       (* header: "Month Year", centred, bold *)
       let monthyear = sprintf "%s %d" (Printer.name_of_month month) year
                       |> F.center ~w:20
-                      |> F.bold "%s"
+                      |> (fun s -> if not plain then F.bold "%s" s else s)
       in
 
       (* weekdays: "Mo Tu ... Su", underlined *)
@@ -157,7 +157,7 @@ let cal plain today ncols sep firstday range =
                      |> Array.map Day.to_string
                      |> Array.to_list
                      |> String.concat ~sep:" "
-                     |> F.underline "%s"
+                     |> (fun s -> if not plain then F.underline "%s" s else s)
       in
 
       (* days of the week: first row lpadded, last row rpadded *)
@@ -175,7 +175,8 @@ let cal plain today ncols sep firstday range =
           )
         |> (let opt_hilight d =
               (* highlight today's date *)
-              if (Date.year today = year
+              if (not plain
+                  && Date.year today = year
                   && Date.month today = month
                   && Date.day_of_month today = d
                  )
