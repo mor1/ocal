@@ -1,33 +1,32 @@
--include Makefile.config
+.PHONY: build clean test install uninstall
 
-# OASIS_START
-# DO NOT EDIT (digest: 2d4c24273300135e3c2348b6ba5b4a30)
+build:
+	jbuilder build @install --dev
 
-SETUP = ocaml setup.ml
+test:
+	jbuilder runtest
 
-doc: setup.data build
-	$(SETUP) -doc $(DOCFLAGS)
+install:
+	jbuilder install
 
-test: setup.data build
-	$(SETUP) -test $(TESTFLAGS)
-
-all:
-	$(SETUP) -all $(ALLFLAGS)
-
-install: setup.data
-	$(SETUP) -install $(INSTALLFLAGS)
-
-uninstall: setup.data
-	$(SETUP) -uninstall $(UNINSTALLFLAGS)
-
-reinstall: setup.data
-	$(SETUP) -reinstall $(REINSTALLFLAGS)
+uninstall:
+	jbuilder uninstall
 
 clean:
-	$(SETUP) -clean $(CLEANFLAGS)
+	$(RM) -r _build
 
-.PHONY: doc test all install uninstall reinstall clean
+# until we have https://github.com/ocaml/opam-publish/issues/38
 
-# OASIS_STOP
+REPO=../opam-repository
+PACKAGES=$(REPO)/packages
 
--include Makefile.local
+pkg-%:
+	topkg opam pkg -n $*
+	mkdir -p $(PACKAGES)/$*
+	cp -r _build/$*.* $(PACKAGES)/$*/
+	rm -f $(PACKAGES)/$*/$*.opam
+	cd $(PACKAGES) && git add $*
+
+PKGS=$(basename $(wildcard *.opam))
+opam-pkg:
+	$(MAKE) $(PKGS:%=pkg-%)
