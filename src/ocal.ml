@@ -40,7 +40,7 @@ module List = struct
           let n' = (i+1) mod n in
           let acc' = ((e :: hd acc) :: (tl acc)) in
           n', acc'
-        | (i, _) (* i >= n *) -> failwith "never reached"
+        | (_i, _n) (* i >= n *) -> failwith "never reached"
       ) (0, [])
     |> snd
     |> List.(rev_map rev)
@@ -115,8 +115,8 @@ let months range =
 
     let rec aux d nd acc =
       match Date.compare d nd with
-      | n when n > 0 (* >  *) -> List.rev acc
-      | n            (* <= *) ->
+      | n  when n > 0 (* >  *) -> List.rev acc
+      | _n            (* <= *) ->
         let d' = (Date.next d `Month) in
         aux d' nd (d::acc)
     in
@@ -199,7 +199,7 @@ let cal plain today ncols sep firstday range =
     )
   |> List.chunk ncols
   |> (fun rows ->
-      List.iteri (fun r row ->
+      List.iteri (fun _r row ->
           let nlines =
             List.(map length row |> fold_left (fun acc e -> max acc e) 0)
           in
@@ -218,9 +218,9 @@ let cal plain today ncols sep firstday range =
               let sep = if j = 0 then "" else sep in
               match month, line with
               | None, _ -> ()
-              | Some month, None ->
+              | Some _month, None ->
                 Printf.printf "%s%s" sep (String.(v ~len:20 space));
-              | Some month, Some line ->
+              | Some _month, Some line ->
                 Printf.printf "%s%s" sep line
             done;
             Printf.printf "\n"
