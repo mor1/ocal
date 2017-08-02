@@ -1,19 +1,19 @@
 .PHONY: build clean test install uninstall
 
 build:
-	jbuilder build @install --dev
+	jbuilder build --dev
+
+clean:
+	jbuilder clean
 
 test:
-	jbuilder runtest
+	jbuilder runtest --dev
 
 install:
 	jbuilder install
 
 uninstall:
 	jbuilder uninstall
-
-clean:
-	$(RM) -r _build
 
 # until we have https://github.com/ocaml/opam-publish/issues/38
 
