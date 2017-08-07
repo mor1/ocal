@@ -106,15 +106,17 @@ let cal plain weeks today ncols _sep firstday range =
             I.void 0 0
           else (
             let iu = if not plain then F.iu else F.s in
-            (iu "wk")
+            (iu "wk ")
           )
         in
         wk
-        <|>
-        let f = if not plain then F.u else F.s in
-        I.hcat (Days.of_week firstday
-                |> List.map (fun d -> f (" " ^ Day.to_string d))
-               )
+        <|> (
+          let f = if not plain then F.u else F.s in
+          I.hcat (Days.of_week firstday
+                  |> List.map (fun d -> f (" " ^ Day.to_string d))
+                 )
+          |> I.hcrop 1 0
+        )
       in
 
       let w = I.width colheads in
@@ -167,7 +169,7 @@ let cal plain weeks today ncols _sep firstday range =
         days
       )
       <|>
-      I.void 1 0
+      I.void (if not weeks then 4 else 1) 0
     )
   |> List.chunk ncols
   |> List.map I.hcat
