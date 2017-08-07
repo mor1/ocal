@@ -23,7 +23,7 @@ distrib:
 	topkg distrib
 
 publish:
-	topkg publish distrib # until pkg/pkg.ml is updated to not build docs
+	topkg publish
 	topkg opam pkg
 	topkg opam submit
 
