@@ -1,4 +1,4 @@
-.PHONY: build clean test install uninstall doc
+.PHONY: build clean test install uninstall distrib publish release
 
 build:
 	jbuilder build --dev
@@ -15,5 +15,16 @@ install:
 uninstall:
 	jbuilder uninstall
 
-doc:
-	jbuilder build @doc
+distrib:
+	jbuilder subst
+	[ -x $$(opam config var root)/plugins/opam-publish/repos/ocal ] || \
+	  opam-publish repo add ocal mor1/ocal
+	topkg tag
+	topkg distrib
+
+publish:
+	topkg publish distrib # until pkg/pkg.ml is updated to not build docs
+	topkg opam pkg
+	topkg opam submit
+
+release: distrib publish
