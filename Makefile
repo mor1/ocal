@@ -16,7 +16,6 @@ uninstall:
 	jbuilder uninstall
 
 distrib:
-	jbuilder subst
 	[ -x $$(opam config var root)/plugins/opam-publish/repos/ocal ] || \
 	  opam-publish repo add ocal mor1/ocal
 	topkg tag
