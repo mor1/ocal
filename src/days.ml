@@ -21,7 +21,8 @@ let of_week firstday =
   Array.sub days (find firstday) 7
   |> Array.to_list
 
-let of_month length =
+let of_month monthyear =
+  let length = Date.days_in_month monthyear in
   let rec aux a b =
     if a > b then [] else a :: aux (a+1) b
   in

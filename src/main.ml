@@ -35,11 +35,11 @@ let sep =
   let doc = "Format using $(docv) as month separator." in
   Arg.(value & opt string "    " & info ["s"; "separator"] ~docv:"sep" ~doc)
 
-let weeks =
+let weeks_of_year =
   let doc = "Display weeks of year." in
   Arg.(value & flag & info ["w"; "weeks"] ~doc)
 
-let firstday =
+let first_dow =
   let aux =
     let parse day =
       try
@@ -50,7 +50,7 @@ let firstday =
     parse, fun ppf p -> Format.fprintf ppf "%s" (Printer.short_name_of_day p)
   in
   let doc = "Format with $(docv) as first day-of-week." in
-  Arg.(value & opt aux (Date.Mon) & info ["f"; "firstday"] ~docv:"ddd" ~doc)
+  Arg.(value & opt aux (Date.Mon) & info ["f"; "first_dow"] ~docv:"ddd" ~doc)
 
 let plain =
   let doc = "Turn off highlighting." in
@@ -91,7 +91,7 @@ An alternative to\
   ]
   in
   Term.(const Ocal.cal
-        $ plain $ weeks $ today $ ncols $ sep $ firstday $ range),
+        $ plain $ weeks_of_year $ today $ ncols $ sep $ first_dow $ range),
   Term.info Config.command ~version:Config.version ~doc ~man
 
 (* go! *)
