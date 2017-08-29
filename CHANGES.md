@@ -1,3 +1,10 @@
+### 0.2.0 (2017-08-28)
+
+  * Update `pkg/pkg.ml` to *not* build docs during `topkg publish`
+  * Use [notty](https://pqwy.github.io/notty/) for layout
+  * Add option to display week-of-year
+  * Set timezone to be Local rather than UTC
+
 ### 0.1.3 (2017-08-02)
 
   * Upgrade build to use `jbuilder` and modern `opam`, `topkg`, etc
