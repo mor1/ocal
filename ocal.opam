@@ -19,4 +19,5 @@ depends: [
   "astring"   {build}
   "calendar"  {build}
   "cmdliner"  {build}
+  "notty"     {build}
 ]
