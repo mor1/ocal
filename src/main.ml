@@ -64,8 +64,8 @@ let range =
             \  $(i,d1-d2) (all months in the range $(i,d1-d2)).\
             "
   in
-  let thismonth = Some (Printer.Date.sprint "%b%Y" (Date.today ())) in
-  Arg.(required & pos 0 (some string) thismonth & info [] ~docv:"DATES" ~doc)
+  let thismonth = Printer.Date.sprint "%b%Y" (Date.today ()) in
+  Arg.(value & pos 0 string thismonth & info [] ~docv:"DATES" ~doc)
 
 let cmd =
   let doc = "pretty print calendar months" in
