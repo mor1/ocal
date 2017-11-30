@@ -180,7 +180,7 @@ let months range =
 let cal plain weeks_of_year today ncols sep first_dow range =
   let weeks_of_year = not weeks_of_year in (* default to true *)
   let f = if plain then F.plain else F.pretty in
-  let sep = F.s sep in
+  let sep = f.F.s sep in
 
   range
   |> months

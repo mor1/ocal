@@ -36,7 +36,7 @@ let sep =
   Arg.(value & opt string "    " & info ["s"; "separator"] ~docv:"sep" ~doc)
 
 let weeks_of_year =
-  let doc = "Display weeks of year." in
+  let doc = "Don't display weeks of year." in
   Arg.(value & flag & info ["w"; "weeks"] ~doc)
 
 let first_dow =
