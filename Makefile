@@ -1,7 +1,7 @@
 .PHONY: build clean test install uninstall distrib publish release
 
 build:
-	jbuilder build --dev
+	jbuilder build @install --dev
 
 clean:
 	jbuilder clean
