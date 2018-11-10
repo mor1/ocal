@@ -4,20 +4,22 @@ authors: [ "Richard Mortier" ]
 license: "ISC"
 
 homepage: "https://github.com/mor1/ocal"
-dev-repo: "https://github.com/mor1/ocal.git"
+dev-repo: "git://github.com/mor1/ocal.git"
 bug-reports: "https://github.com/mor1/ocal/issues"
 doc: "https://mor1.github.io/ocal/"
-
-available: [ ocaml-version >= "4.02.3" ]
 
 build: [
   ["dune" "subst"] {pinned}
   ["dune" "build" "-p" name "-j" jobs]
 ]
-build-test: [["dune" "runtest" "-p" name "-j" jobs]]
+
+run-test: [
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
 
 depends: [
   "ocamlfind" {build}
+  "ocaml"     {build & >="4.02.3"}
   "dune"      {build}
   "astring"   {build}
   "calendar"  {build}
@@ -25,9 +27,9 @@ depends: [
   "notty"     {build & >="0.2.0"}
 ]
 
-synopsis: "ocal — An improved Unix `cal` utility"
+  synopsis: "Ocal — An improved Unix `cal` utility"
 
-description: """
+            description: """
 `ocal` is a replacement for the standard Unix `cal` utility.
 Partly because I could, partly because I'd become too irritated with its command
 line interface.
