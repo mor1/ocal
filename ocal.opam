@@ -4,7 +4,7 @@ authors: [ "Richard Mortier" ]
 license: "ISC"
 
 homepage: "https://github.com/mor1/ocal"
-dev-repo: "git://github.com/mor1/ocal.git"
+dev-repo: "git+https://github.com/mor1/ocal.git"
 bug-reports: "https://github.com/mor1/ocal/issues"
 doc: "https://mor1.github.io/ocal/"
 
