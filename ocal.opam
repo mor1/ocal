@@ -18,18 +18,18 @@ run-test: [
 ]
 
 depends: [
-  "ocamlfind" {build}
-  "ocaml"     {build & >="4.02.3"}
-  "dune"      {build}
   "astring"   {build}
   "calendar"  {build}
   "cmdliner"  {build}
+  "dune"      {build}
   "notty"     {build & >="0.2.0"}
+  "ocaml"     {build & >="4.02.3"}
+  "ocamlfind" {build}
 ]
 
-  synopsis: "Ocal — An improved Unix `cal` utility"
+synopsis: "An improved Unix `cal` utility"
 
-            description: """
+description: """
 `ocal` is a replacement for the standard Unix `cal` utility.
 Partly because I could, partly because I'd become too irritated with its command
 line interface.

@@ -1,3 +1,5 @@
+DOCDIR = _build/default/_doc/_html/
+
 .default: build
 
 .PHONY: build
@@ -33,11 +35,10 @@ doc:
 
 .PHONY: read
 read: doc
-	open _build/default/_doc/_html/index.html \
-	  || open _build/default/_doc/_html/
+	open $(DOCDIR)/index.html || open $(DOCDIR)
 
 .PHONY: release
 release:
 	opam list -i --silent dune-release || opam install -y dune-release
 	dune-release tag
-	dune-release
+	dune-release -vv
