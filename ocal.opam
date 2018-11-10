@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 maintainer: "Richard Mortier <mort@cantab.net>"
 authors: [ "Richard Mortier" ]
 license: "ISC"
@@ -11,15 +11,24 @@ doc: "https://mor1.github.io/ocal/"
 available: [ ocaml-version >= "4.02.3" ]
 
 build: [
-  [ "jbuilder" "subst" ] {pinned}
-  [ "jbuilder" "build" "-p" name "-j" jobs ]
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
 ]
+build-test: [["dune" "runtest" "-p" name "-j" jobs]]
 
 depends: [
   "ocamlfind" {build}
-  "jbuilder"  {build & >="1.0+beta11"}
+  "dune"      {build}
   "astring"   {build}
   "calendar"  {build}
   "cmdliner"  {build}
   "notty"     {build & >="0.2.0"}
 ]
+
+synopsis: "ocal — An improved Unix `cal` utility"
+
+description: """
+`ocal` is a replacement for the standard Unix `cal` utility.
+Partly because I could, partly because I'd become too irritated with its command
+line interface.
+"""

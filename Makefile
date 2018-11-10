@@ -1,29 +1,43 @@
-.PHONY: build clean test install uninstall distrib publish release
+.default: build
 
+.PHONY: build
 build:
-	jbuilder build @install --dev
+	dune build
 
+.PHONY: clean
 clean:
-	jbuilder clean
+	dune clean
 
-test:
-	jbuilder runtest --dev
-
+.PHONY: install
 install:
-	jbuilder install
+	dune install
 
+.PHONY: uninstall
 uninstall:
-	jbuilder uninstall
+	dune uninstall
 
-distrib:
-	[ -x $$(opam config var root)/plugins/opam-publish/repos/ocal ] || \
-	  opam-publish repo add ocal mor1/ocal
-	topkg tag
-	topkg distrib
+.PHONY: test
+test:
+	dune runtest
 
-publish:
-	topkg publish
-	topkg opam pkg
-	topkg opam submit
+.PHONY: lint
+lint:
+	dune build @lint
+	dune-release lint
 
-release: distrib publish
+.PHONY: doc
+doc:
+	opam list -i --silent odoc || opam install -y odoc
+	dune build @doc
+	dune build @doc-private
+
+.PHONY: read
+read: doc
+	open _build/default/_doc/_html/index.html \
+	  || open _build/default/_doc/_html/
+
+.PHONY: release
+release:
+	opam list -i --silent dune-release || opam install -y dune-release
+	dune-release tag
+	dune-release
