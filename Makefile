@@ -4,7 +4,7 @@ DOCDIR = _build/default/_doc/_html/
 
 .PHONY: build
 build:
-	dune build
+	dune build @all
 
 .PHONY: clean
 clean:
