@@ -12,7 +12,8 @@ clean:
 
 .PHONY: install
 install:
-	dune install
+	dune build @install
+	ln -sf ~/u/src/ocal/_build/install/default/bin/ocal ~/.local/bin/
 
 .PHONY: uninstall
 uninstall:

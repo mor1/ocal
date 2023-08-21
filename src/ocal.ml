@@ -148,12 +148,16 @@ let months range =
     let input = String.Ascii.capitalize input in
     Printer.Date.(
       (* monthyear *)
-      try from_fstring "%d%b%Y" ("01"^input)
-      with Invalid_argument _ ->
-        ( (* year *)
-          try from_fstring "%d%b%Y" ("01"^(if rh then "Dec" else "Jan")^input)
-          with Invalid_argument _ ->
-            ( (* month *)
+      try
+        from_fstring "%d%b%Y" ("01"^input)
+      with
+      | Invalid_argument _ -> (
+          (* year *)
+          try
+            from_fstring "%d%b%Y" ("01"^(if rh then "Dec" else "Jan")^input)
+          with
+          | Invalid_argument _ -> (
+              (* month *)
               let thisyear = string_of_int Date.(year (today ())) in
               from_fstring "%d%b%Y" ("01"^input^thisyear)
             )

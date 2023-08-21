@@ -90,13 +90,13 @@ An alternative to\
     `P "Report bugs at %%PKG_ISSUES%%";
   ]
   in
-  Term.(const Ocal.cal
-        $ plain $ weeks_of_year $ today $ ncols $ sep $ first_dow $ range),
-  Term.info Config.command ~version:Config.version ~doc ~man
+  let info = Cmd.info "ocal" ~version:"%%VERSION%%" ~doc ~man in
+  Cmd.v info Term.(
+    const Ocal.cal
+    $ plain $ weeks_of_year $ today $ ncols $ sep $ first_dow $ range
+  )
 
 (* go! *)
 
 let () =
-  match Term.eval cmd with
-  | `Error _ -> exit 1
-  | _ -> exit 0
+  exit (Cmd.eval cmd)
