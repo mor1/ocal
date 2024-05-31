@@ -30,3 +30,9 @@
 ### 0.1.1 (2016-01-05)
 
   * Initial release
+
+<!--
+SPDX-FileCopyrightText: 2024 Richard Mortier <mort@cantab.net>
+
+SPDX-License-Identifier: ISC
+-->

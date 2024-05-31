@@ -1,9 +1,7 @@
 (*
- * Copyright (c) 2016-2017 Richard Mortier <mort@cantab.net>
+ * SPDX-FileCopyrightText: 2016 - 2024 Richard Mortier <mort@cantab.net>
  *
- * Licensed under the ISC Licence; see LICENSE.md in the root of this
- * distribution or the full text at https://opensource.org/licenses/isc-license
- *
+ * SPDX-License-Identifier: ISC
  *)
 
 open CalendarLib

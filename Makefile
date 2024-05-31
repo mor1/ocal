@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Richard Mortier <mort@cantab.net>
+#
+# SPDX-License-Identifier: ISC
+
 DOCDIR = _build/default/_doc/_html/
 
 .default: build

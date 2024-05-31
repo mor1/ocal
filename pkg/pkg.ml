@@ -1,3 +1,9 @@
+(*
+ * SPDX-FileCopyrightText: 2024 Richard Mortier <mort@cantab.net>
+ *
+ * SPDX-License-Identifier: ISC
+ *)
+
 #!/usr/bin/env ocaml
 #use "topfind"
 #require "topkg-jbuilder"

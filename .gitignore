@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Richard Mortier <mort@cantab.net>
+#
+# SPDX-License-Identifier: ISC
+
 _build
 *.merlin
 *.install
