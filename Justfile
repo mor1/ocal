@@ -57,4 +57,14 @@ release:
 # install dependencies
 depends:
     opam install --yes dune-release odoc
-    opam install --yes . --deps-only
+    opam install --yes . --deps-only --no-depexts
+    # sigh. opam vs dune. sigh.
+    dune describe external-lib-deps | rg 'required\)' \
+    | tr -d "(" | tr -s " " | cut -d" " -f 2 | while read pkg; do \
+      echo "=== installing $pkg" ; \
+      opam install --yes --best-effort $pkg ; \
+    done
+
+# upgrade and update OPAM
+update:
+    opam update --upgrade --yes
