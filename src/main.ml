@@ -13,10 +13,10 @@ let () = Time_Zone.(change Local)
 let today =
   let date =
     let parse date =
-      try `Ok (Printer.Date.from_fstring "%d%b%Y" date)
-      with Invalid_argument _ -> `Error ("invalid date string: " ^ date)
+        try Ok (Printer.Date.from_fstring "%d%b%Y" date)
+      with Invalid_argument _ -> Error (`Msg ("invalid date string: " ^ date))
     in
-    (parse, fun ppf p -> Format.fprintf ppf "%s" (Printer.Date.to_string p))
+    Arg.conv (parse, fun ppf p -> Format.fprintf ppf "%s" (Printer.Date.to_string p))
   in
   let doc = "Set today's date." in
   Arg.(
@@ -39,10 +39,10 @@ let weeks_of_year =
 let first_dow =
   let aux =
     let parse day =
-      try `Ok (day |> String.Ascii.capitalize |> Day.of_string)
-      with Invalid_argument s -> `Error s
+      try Ok (day |> String.Ascii.capitalize |> Day.of_string)
+      with Invalid_argument s -> Error (`Msg s)
     in
-    (parse, fun ppf p -> Format.fprintf ppf "%s" (Printer.short_name_of_day p))
+    Arg.conv (parse, fun ppf p -> Format.fprintf ppf "%s" (Printer.short_name_of_day p))
   in
   let doc = "Format with $(docv) as first day-of-week." in
   Arg.(value & opt aux Date.Mon & info [ "f"; "first_dow" ] ~docv:"ddd" ~doc)
