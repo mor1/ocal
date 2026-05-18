@@ -27,8 +27,6 @@ module F = struct
   let r = I.string A.(st reverse)
   let plain = { s; b = s; iu = s; i = s; u = s; r = s }
   let pretty = { s; b; iu; i; u; r }
-  let lpad ?(f = s) ~w x = x |> f |> I.hsnap ~align:`Right w
-  let rpad ?(f = s) ~w x = x |> f |> I.hsnap ~align:`Left w
   let centre ?(f = s) ~w x = x |> f |> I.hsnap ~align:`Middle w
   let endl i = Notty_unix.(i |> eol |> output_image)
 end
