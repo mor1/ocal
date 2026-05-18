@@ -104,14 +104,13 @@ let render_month ~f ~weeks_of_year ~width ~first_dow ~today ~y ~m days =
   in
   let firstweek, otherweeks = split (first_day_of_full_week - 1) days in
   (match firstweek with
-  | [] -> I.void 0 0
-  | firstweek ->
-      render_week ~f ~weeks_of_year ~width ~today ~y ~m `Right firstweek)
+    | [] -> I.void 0 0
+    | firstweek ->
+        render_week ~f ~weeks_of_year ~width ~today ~y ~m `Right firstweek)
   <-> I.vcat
         (chunk 7 otherweeks
         |> List.map (fun weekdays ->
-               render_week ~f ~weeks_of_year ~width ~today ~y ~m `Left weekdays)
-        )
+            render_week ~f ~weeks_of_year ~width ~today ~y ~m `Left weekdays))
 
 (** generate a list of month-year pairs from the CLI specified range *)
 let months range =
@@ -153,13 +152,13 @@ let cal plain weeks_of_year today ncols sep first_dow range =
 
   range |> months
   |> List.map (fun monthyear ->
-         let m, y = Date.(month monthyear, year monthyear) in
-         let header = render_header ~f ~weeks_of_year ~first_dow ~y ~m in
-         let days =
-           let width = I.width header in
-           let days = Days.of_month monthyear in
-           render_month ~f ~weeks_of_year ~width ~first_dow ~today ~y ~m days
-         in
-         let pad = I.void (if not weeks_of_year then 4 else 1) 0 in
-         header <-> days <|> (pad </> sep))
+      let m, y = Date.(month monthyear, year monthyear) in
+      let header = render_header ~f ~weeks_of_year ~first_dow ~y ~m in
+      let days =
+        let width = I.width header in
+        let days = Days.of_month monthyear in
+        render_month ~f ~weeks_of_year ~width ~first_dow ~today ~y ~m days
+      in
+      let pad = I.void (if not weeks_of_year then 4 else 1) 0 in
+      header <-> days <|> (pad </> sep))
   |> chunk ncols |> List.map I.hcat |> I.vcat |> F.endl
