@@ -2,7 +2,4 @@
 #
 # SPDX-License-Identifier: ISC
 
-_build
-*.merlin
-*.install
-_opam
+_build/
