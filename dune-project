@@ -11,7 +11,7 @@
 
 (maintainers "Richard Mortier <mort@cantab.net>")
 
-(license MIT)
+(license ISC)
 
 (package
  (name ocal)
